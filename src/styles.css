@@ -1,1 +1,23 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer components {
+  .input-base {
+    @apply bg-gray-50 border border-gray-300 rounded-lg
+           focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
+           dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+           dark:focus:ring-blue-500 dark:focus:border-blue-500;
+  }
+
+  .button {
+    @apply text-center font-semibold px-4 py-2 rounded cursor-pointer;
+  }
+
+  .button-primary {
+    @apply bg-green-300;
+  }
+  .button-secondary {
+    @apply bg-blue-300 text-gray-800;
+  }
+}
