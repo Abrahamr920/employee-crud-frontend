@@ -2,11 +2,12 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs';
+import { SearchSvgComponent } from '../../../shared/search-svg/search-svg.component';
 import { EmployeesService } from '../../employees.service';
 
 @Component({
   selector: 'employees-table',
-  imports: [CurrencyPipe, DatePipe],
+  imports: [CurrencyPipe, DatePipe, SearchSvgComponent],
   templateUrl: './employees-table.component.html',
 })
 export class EmployeesTableComponent {
