@@ -1,0 +1,127 @@
+<form
+  class="max-w-sm mx-auto"
+  [formGroup]="employeeForm"
+  (ngSubmit)="onSubmit()"
+>
+  <!-- Campos -->
+  <div class="text-sm text-gray-900 dark:text-white">
+    <!-- Id -->
+    <input type="hidden" th:field="*{id}" />
+    <div class="flex gap-4 mt-2">
+      <!-- name -->
+      <div class="w-1/2">
+        <label for="name" class="block mb-2 font-medium">Name</label>
+        <input
+          type="text"
+          id="name"
+          placeholder="John"
+          formControlName="name"
+          class="input-base"
+          [ngClass]="{
+            'border-red-500 border-2':
+              employeeForm.get('name')?.invalid &&
+              employeeForm.get('name')?.touched
+          }"
+        />
+      </div>
+      <!-- lastName -->
+      <div class="w-1/2">
+        <label for="lastname" class="block mb-2 font-medium">Name</label>
+        <input
+          type="text"
+          id="lastname"
+          formControlName="lastname"
+          placeholder="Doe"
+          class="input-base"
+        />
+      </div>
+    </div>
+    <div class="flex gap-4 mt-2">
+      <!-- Email -->
+      <div class="w-1/2">
+        <label for="name" class="block mb-2 font-medium">Name</label>
+        <input
+          type="text"
+          id="email"
+          placeholder="name@flowbite.com"
+          formControlName="email"
+          class="input-base"
+        />
+      </div>
+      <!-- hireDate -->
+      <div class="w-1/2">
+        <label for="hireDate" class="block mb-2 font-medium">Hire Date</label>
+        <input
+          type="date"
+          id="hireDate"
+          formControlName="hireDate"
+          class="input-base"
+        />
+      </div>
+    </div>
+
+    <div class="flex gap-4 mt-2">
+      <!-- Phone -->
+      <div class="w-1/2">
+        <label for="phone" class="block mb-2 font-medium">Phone</label>
+        <input
+          type="text"
+          id="phone"
+          formControlName="phone"
+          mask="0000-0000"
+          placeholder="0000-0000"
+          class="input-base"
+        />
+      </div>
+      <!-- salary -->
+      <div class="w-1/2">
+        <label for="salary" class="block mb-2 font-medium">Salary</label>
+        <input
+          type="number"
+          id="salary"
+          min="0"
+          step="0.01"
+          placeholder="400.00"
+          formControlName="salary"
+          class="input-base"
+        />
+      </div>
+    </div>
+    <div class="flex gap-4 mt-2">
+      <!-- position -->
+      <div class="w-1/2">
+        <label for="position" class="block mb-2 font-medium">Position</label>
+        <select id="position" formControlName="position" class="input-base">
+          <option disabled>Seleccione una posición</option>
+          @for (pos of positionsResource.value(); track $index) {
+          <option value="pos" [text]="">{{ pos.name }}</option>
+          }
+        </select>
+      </div>
+      <!-- state -->
+      <div class="w-1/2">
+        <label for="state" class="block mb-2 font-medium">Status</label>
+        <select id="state" formControlName="state" class="input-base">
+          <option disabled>Seleccione un estado</option>
+          @for (status of statuses; track status) {
+
+          <option value="pos" [text]="">{{ status }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  </div>
+  <!-- Add Buttons -->
+  <div class="w-full flex gap-4 my-2">
+    <button type="submit" class="w-full button button-primary">Agregar</button>
+  </div>
+  <!-- Edit Buttons -->
+  <div class="w-full flex gap-4 my-2">
+    <a th:href="@{/employees}" class="w-1/2 button button-secondary">
+      Cancelar
+    </a>
+    <button type="submit" class="w-1/2 button button-primary">
+      Actualizar
+    </button>
+  </div>
+</form>

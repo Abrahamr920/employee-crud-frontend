@@ -15,7 +15,7 @@ export class EmployeesTableComponent {
   employeesResource = rxResource({
     loader: () =>
       this.employeeService
-        .getAllEmployees()
+        .getEmployees()
         .pipe(tap((resp) => console.log('Resp', resp))),
   });
 }
