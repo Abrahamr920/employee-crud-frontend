@@ -15,7 +15,11 @@ import { EmployeesService } from '../../employees.service';
 export class EmployeesFormComponent {
   employeeService = inject(EmployeesService);
   statuses: string[] = ['ACTIVO', 'INACTIVO', 'LICENCIA', 'VACACIONES'];
+
+  submitted = false;
+
   fb = inject(FormBuilder);
+
   positionsResource = rxResource({
     loader: () =>
       this.employeeService
@@ -39,6 +43,7 @@ export class EmployeesFormComponent {
   });
 
   onSubmit() {
+    this.submitted = true;
     if (this.employeeForm.valid) {
       const employee = this.employeeForm.value;
       console.log('Empleado enviado', employee);

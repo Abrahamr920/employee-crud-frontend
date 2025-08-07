@@ -19,33 +19,40 @@
           class="input-base"
           [ngClass]="{
             'border-red-500 border-2':
-              employeeForm.get('name')?.invalid &&
-              employeeForm.get('name')?.touched
+              employeeForm.get('name')?.invalid && submitted
           }"
         />
       </div>
       <!-- lastName -->
       <div class="w-1/2">
-        <label for="lastname" class="block mb-2 font-medium">Name</label>
+        <label for="lastname" class="block mb-2 font-medium">Lastname</label>
         <input
           type="text"
           id="lastname"
           formControlName="lastname"
           placeholder="Doe"
           class="input-base"
+          [ngClass]="{
+            'border-red-500 border-2':
+              employeeForm.get('lastname')?.invalid && submitted
+          }"
         />
       </div>
     </div>
     <div class="flex gap-4 mt-2">
       <!-- Email -->
       <div class="w-1/2">
-        <label for="name" class="block mb-2 font-medium">Name</label>
+        <label for="name" class="block mb-2 font-medium">Email</label>
         <input
           type="text"
           id="email"
           placeholder="name@flowbite.com"
           formControlName="email"
           class="input-base"
+          [ngClass]="{
+            'border-red-500 border-2':
+              employeeForm.get('email')?.invalid && submitted
+          }"
         />
       </div>
       <!-- hireDate -->
@@ -56,6 +63,10 @@
           id="hireDate"
           formControlName="hireDate"
           class="input-base"
+          [ngClass]="{
+            'border-red-500 border-2':
+              employeeForm.get('hireDate')?.invalid && submitted
+          }"
         />
       </div>
     </div>
@@ -71,6 +82,10 @@
           mask="0000-0000"
           placeholder="0000-0000"
           class="input-base"
+          [ngClass]="{
+            'border-red-500 border-2':
+              employeeForm.get('phone')?.invalid && submitted
+          }"
         />
       </div>
       <!-- salary -->
@@ -84,6 +99,10 @@
           placeholder="400.00"
           formControlName="salary"
           class="input-base"
+          [ngClass]="{
+            'border-red-500 border-2':
+              employeeForm.get('salary')?.invalid && submitted
+          }"
         />
       </div>
     </div>
@@ -91,7 +110,15 @@
       <!-- position -->
       <div class="w-1/2">
         <label for="position" class="block mb-2 font-medium">Position</label>
-        <select id="position" formControlName="position" class="input-base">
+        <select
+          id="position"
+          formControlName="position"
+          class="input-base"
+          [ngClass]="{
+            'border-red-500 border-2':
+              employeeForm.get('position')?.untouched && submitted
+          }"
+        >
           <option disabled>Seleccione una posición</option>
           @for (pos of positionsResource.value(); track $index) {
           <option value="pos" [text]="">{{ pos.name }}</option>
@@ -101,7 +128,15 @@
       <!-- state -->
       <div class="w-1/2">
         <label for="state" class="block mb-2 font-medium">Status</label>
-        <select id="state" formControlName="state" class="input-base">
+        <select
+          id="state"
+          formControlName="state"
+          class="input-base"
+          [ngClass]="{
+            'border-red-500 border-2':
+              employeeForm.get('status')?.untouched && submitted
+          }"
+        >
           <option disabled>Seleccione un estado</option>
           @for (status of statuses; track status) {
 
