@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { Employee } from '../core/interfaces';
+import { Employee, Position } from '../core/interfaces';
 
 const API_URL = 'http://localhost:8080/api/employees';
 
@@ -11,9 +11,15 @@ const API_URL = 'http://localhost:8080/api/employees';
 export class EmployeesService {
   private http = inject(HttpClient);
 
-  getAllEmployees(): Observable<Employee[]> {
+  getEmployees(): Observable<Employee[]> {
     return this.http
       .get<Employee[]>(API_URL)
+      .pipe(tap((resp) => console.log('Resp', resp)));
+  }
+
+  getPositions(): Observable<Position[]> {
+    return this.http
+      .get<Position[]>(`${API_URL}/positions`)
       .pipe(tap((resp) => console.log('Resp', resp)));
   }
 }
