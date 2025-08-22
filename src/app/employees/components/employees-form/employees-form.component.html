@@ -3,10 +3,30 @@
   [formGroup]="employeeForm"
   (ngSubmit)="onSubmit()"
 >
+  <!-- Mensajes de éxito/error -->
+  @if (message()) {
+  <div
+    class="mb-4 p-3 rounded-lg text-sm"
+    [ngClass]="
+      message()?.type === 'success'
+        ? 'bg-green-100 text-green-800'
+        : 'bg-red-100 text-red-800'
+    "
+  >
+    {{ message()?.text }}
+  </div>
+  }
+
+  <!-- Título dinámico -->
+  <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+    {{ isEditing() ? "Editar Empleado" : "Nuevo Empleado" }}
+  </h2>
+
   <!-- Campos -->
   <div class="text-sm text-gray-900 dark:text-white">
-    <!-- Id -->
-    <input type="hidden" th:field="*{id}" />
+    <!-- Id (oculto) -->
+    <input type="hidden" formControlName="id" />
+
     <div class="flex gap-4 mt-2">
       <!-- name -->
       <div class="w-1/2">
@@ -22,6 +42,9 @@
               employeeForm.get('name')?.invalid && submitted
           }"
         />
+        @if (employeeForm.get('name')?.invalid && submitted) {
+        <span class="text-red-500 text-xs">El nombre es requerido</span>
+        }
       </div>
       <!-- lastName -->
       <div class="w-1/2">
@@ -37,16 +60,20 @@
               employeeForm.get('lastname')?.invalid && submitted
           }"
         />
+        @if (employeeForm.get('lastname')?.invalid && submitted) {
+        <span class="text-red-500 text-xs">El apellido es requerido</span>
+        }
       </div>
     </div>
+
     <div class="flex gap-4 mt-2">
       <!-- Email -->
       <div class="w-1/2">
-        <label for="name" class="block mb-2 font-medium">Email</label>
+        <label for="email" class="block mb-2 font-medium">Email</label>
         <input
-          type="text"
+          type="email"
           id="email"
-          placeholder="name@flowbite.com"
+          placeholder="name@example.com"
           formControlName="email"
           class="input-base"
           [ngClass]="{
@@ -54,6 +81,9 @@
               employeeForm.get('email')?.invalid && submitted
           }"
         />
+        @if (employeeForm.get('email')?.invalid && submitted) {
+        <span class="text-red-500 text-xs">Email válido requerido</span>
+        }
       </div>
       <!-- hireDate -->
       <div class="w-1/2">
@@ -68,6 +98,9 @@
               employeeForm.get('hireDate')?.invalid && submitted
           }"
         />
+        @if (employeeForm.get('hireDate')?.invalid && submitted) {
+        <span class="text-red-500 text-xs">Fecha requerida</span>
+        }
       </div>
     </div>
 
@@ -87,6 +120,9 @@
               employeeForm.get('phone')?.invalid && submitted
           }"
         />
+        @if (employeeForm.get('phone')?.invalid && submitted) {
+        <span class="text-red-500 text-xs">Teléfono requerido</span>
+        }
       </div>
       <!-- salary -->
       <div class="w-1/2">
@@ -104,26 +140,33 @@
               employeeForm.get('salary')?.invalid && submitted
           }"
         />
+        @if (employeeForm.get('salary')?.invalid && submitted) {
+        <span class="text-red-500 text-xs">Salario válido requerido</span>
+        }
       </div>
     </div>
+
     <div class="flex gap-4 mt-2">
       <!-- position -->
       <div class="w-1/2">
         <label for="position" class="block mb-2 font-medium">Position</label>
         <select
           id="position"
-          formControlName="position"
+          formControlName="positionId"
           class="input-base"
           [ngClass]="{
             'border-red-500 border-2':
-              employeeForm.get('position')?.untouched && submitted
+              employeeForm.get('positionId')?.invalid && submitted
           }"
         >
-          <option disabled>Seleccione una posición</option>
+          <option value="">Seleccione una posición</option>
           @for (pos of positionsResource.value(); track $index) {
-          <option value="pos" [text]="">{{ pos.name }}</option>
+          <option [value]="pos.id">{{ pos.name }}</option>
           }
         </select>
+        @if (employeeForm.get('positionId')?.invalid && submitted) {
+        <span class="text-red-500 text-xs">Posición requerida</span>
+        }
       </div>
       <!-- state -->
       <div class="w-1/2">
@@ -134,29 +177,53 @@
           class="input-base"
           [ngClass]="{
             'border-red-500 border-2':
-              employeeForm.get('status')?.untouched && submitted
+              employeeForm.get('state')?.invalid && submitted
           }"
         >
-          <option disabled>Seleccione un estado</option>
+          <option value="">Seleccione un estado</option>
           @for (status of statuses; track status) {
-
-          <option value="pos" [text]="">{{ status }}</option>
+          <option [value]="status">{{ status }}</option>
           }
         </select>
+        @if (employeeForm.get('state')?.invalid && submitted) {
+        <span class="text-red-500 text-xs">Estado requerido</span>
+        }
       </div>
     </div>
   </div>
-  <!-- Add Buttons -->
-  <div class="w-full flex gap-4 my-2">
-    <button type="submit" class="w-full button button-primary">Agregar</button>
-  </div>
-  <!-- Edit Buttons -->
-  <div class="w-full flex gap-4 my-2">
-    <a th:href="@{/employees}" class="w-1/2 button button-secondary">
+
+  <!-- Botones -->
+  <div class="w-full flex gap-4 my-4">
+    @if (isEditing()) {
+    <!-- Botones para edición -->
+    <button
+      type="button"
+      (click)="cancelEdit()"
+      class="w-1/2 button button-secondary"
+      [disabled]="isLoading()"
+    >
       Cancelar
-    </a>
-    <button type="submit" class="w-1/2 button button-primary">
-      Actualizar
     </button>
+    <button
+      type="submit"
+      class="w-1/2 button button-primary"
+      [disabled]="isLoading()"
+    >
+      @if (isLoading()) {
+      <span class="animate-spin">⏳</span>
+      } @else { Actualizar }
+    </button>
+    } @else {
+    <!-- Botón para crear -->
+    <button
+      type="submit"
+      class="w-full button button-primary"
+      [disabled]="isLoading()"
+    >
+      @if (isLoading()) {
+      <span class="animate-spin">⏳</span>
+      } @else { Agregar Empleado }
+    </button>
+    }
   </div>
 </form>

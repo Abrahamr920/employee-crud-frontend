@@ -71,7 +71,7 @@
 </div>
 
 <div
-  class="relative h-[calc(100vh-240px)] overflow-auto shadow-md sm:rounded-lg"
+  class="relative h-[calc(100vh-240px)] shadow-md sm:rounded-lg overflow-hidden"
 >
   <!-- Estado de carga -->
   @if (employeesResource.isLoading()) {
@@ -86,85 +86,110 @@
   <!-- Tabla de empleados -->
   @else if (employeesResource.value() && employeesResource.value()!.length > 0)
   {
-  <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-    <thead class="text-xs text-gray-700 uppercase sticky top-0 z-10 bg-gray-50">
-      <tr>
-        <th scope="col" class="px-6 py-3">Id</th>
-        <th scope="col" class="px-6 py-3">Name</th>
-        <th scope="col" class="px-6 py-3">Phone</th>
-        <th scope="col" class="px-6 py-3">Position</th>
-        <th scope="col" class="px-6 py-3">Salary</th>
-        <th scope="col" class="px-6 py-3">Hire Date</th>
-        <th scope="col" class="px-6 py-3">Status</th>
-        <th scope="col" class="px-6 py-3"></th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (employee of filteredEmployees(); track $index) {
-      <tr class="bg-white border-b border-gray-200 hover:bg-gray-50">
-        <!-- Id -->
-        <td class="px-6 py-4">{{ employee.id }}</td>
-        <!-- Name -->
-        <th
-          scope="row"
-          class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap"
-        >
-          <div class="ps-3">
-            <div class="text-base font-semibold">
-              {{ employee.name }} <br />{{ employee.lastname }}
+  <div class="overflow-auto" style="height: calc(100vh - 320px)">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+      <thead
+        class="text-xs text-gray-700 uppercase sticky top-0 z-10 bg-gray-50"
+      >
+        <tr>
+          <th scope="col" class="px-6 py-3">Id</th>
+          <th scope="col" class="px-6 py-3">Name</th>
+          <th scope="col" class="px-6 py-3">Phone</th>
+          <th scope="col" class="px-6 py-3">Position</th>
+          <th scope="col" class="px-6 py-3">Salary</th>
+          <th scope="col" class="px-6 py-3">Hire Date</th>
+          <th scope="col" class="px-6 py-3">Status</th>
+          <th scope="col" class="px-6 py-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (employee of filteredEmployees(); track $index) {
+        <tr class="bg-white border-b border-gray-200 hover:bg-gray-50">
+          <!-- Id -->
+          <td class="px-6 py-4">{{ employee.id }}</td>
+          <!-- Name -->
+          <th
+            scope="row"
+            class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap"
+          >
+            <div class="ps-3">
+              <div class="text-base font-semibold">
+                {{ employee.name }} <br />{{ employee.lastname }}
+              </div>
+              <div class="font-normal text-gray-500">{{ employee.email }}</div>
             </div>
-            <div class="font-normal text-gray-500">{{ employee.email }}</div>
-          </div>
-        </th>
-        <!-- Phone -->
-        <td class="px-6 py-4">{{ employee.phone }}</td>
-        <!-- Position -->
-        <td class="px-6 py-4">{{ employee.position.name }}</td>
-        <!-- Salary -->
-        <td class="px-6 py-4">
-          <span>{{
-            employee.salary | currency : "USD" : "symbol" : "1.2-2"
-          }}</span>
-        </td>
-        <!-- Hire Date -->
-        <td class="px-6 py-4">{{ employee.hireDate | date }}</td>
-        <!-- Status -->
-        <td class="px-6 py-4">
-          <div class="flex items-center">
-            @switch (employee.state) { @case ("ACTIVO"){
-            <div class="h-2.5 w-2.5 rounded-full bg-green-500"></div>
-            } @case ("INACTIVO"){
-            <div class="h-2.5 w-2.5 rounded-full bg-red-500"></div>
-            }@case ("VACACIONES"){
-            <div class="h-2.5 w-2.5 rounded-full bg-yellow-400"></div>
-            }@case ("LICENCIA"){
-            <div class="h-2.5 w-2.5 rounded-full bg-blue-500"></div>
-            } @default {
-            <div class="h-2.5 w-2.5 rounded-full bg-gray-400"></div>
-            <span>Estado</span>
-            }} <span class="ms-2">{{ employee.state }}</span>
-          </div>
-        </td>
-        <!-- Action -->
-        <td class="font-medium px-6 py-4">
-          <a
-            href="#"
-            class="text-blue-600 hover:underline"
-            th:href="@{/employees/edit/{id}(id=${employee.id})}"
-            >Edit</a
-          >
-          <a
-            href="#"
-            class="text-red-600 hover:underline ms-2"
-            th:href="@{'/employees/delete/' + ${employee.id}}"
-            onclick="return confirm('Are you sure?')"
-            >Remove</a
-          >
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
+          </th>
+          <!-- Phone -->
+          <td class="px-6 py-4">{{ employee.phone }}</td>
+          <!-- Position -->
+          <td class="px-6 py-4">{{ employee.position.name }}</td>
+          <!-- Salary -->
+          <td class="px-6 py-4">
+            <span>{{
+              employee.salary | currency : "USD" : "symbol" : "1.2-2"
+            }}</span>
+          </td>
+          <!-- Hire Date -->
+          <td class="px-6 py-4">{{ employee.hireDate | date }}</td>
+          <!-- Status -->
+          <td class="px-6 py-4">
+            <div class="flex items-center">
+              @switch (employee.state) { @case ("ACTIVO"){
+              <div class="h-2.5 w-2.5 rounded-full bg-green-500"></div>
+              } @case ("INACTIVO"){
+              <div class="h-2.5 w-2.5 rounded-full bg-red-500"></div>
+              }@case ("VACACIONES"){
+              <div class="h-2.5 w-2.5 rounded-full bg-yellow-400"></div>
+              }@case ("LICENCIA"){
+              <div class="h-2.5 w-2.5 rounded-full bg-blue-500"></div>
+              } @default {
+              <div class="h-2.5 w-2.5 rounded-full bg-gray-400"></div>
+              <span>Estado</span>
+              }} <span class="ms-2">{{ employee.state }}</span>
+            </div>
+          </td>
+          <!-- Action -->
+          <td class="font-medium px-6 py-4">
+            @if (showDeleteConfirm() === employee.id) {
+            <!-- Confirmación de eliminación -->
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-red-600">¿Eliminar?</span>
+              <button
+                (click)="deleteEmployee(employee.id)"
+                class="text-red-600 hover:text-red-800 text-sm font-medium px-2 py-1 border border-red-300 rounded hover:bg-red-50"
+              >
+                Sí
+              </button>
+              <button
+                (click)="cancelDelete()"
+                class="text-gray-600 hover:text-gray-800 text-sm font-medium px-2 py-1 border border-gray-300 rounded hover:bg-gray-50"
+              >
+                No
+              </button>
+            </div>
+            } @else {
+            <!-- Botones de acción normales -->
+            <div class="flex items-center gap-2">
+              <button
+                (click)="editEmployee(employee)"
+                class="text-blue-600 hover:text-blue-800 text-sm font-medium px-2 py-1 border border-blue-300 rounded hover:bg-blue-50"
+              >
+                Editar
+              </button>
+              <button
+                (click)="confirmDelete(employee.id)"
+                class="text-red-600 hover:text-red-800 text-sm font-medium px-2 py-1 border border-red-300 rounded hover:bg-red-50"
+              >
+                Eliminar
+              </button>
+            </div>
+            }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
   <!-- Mensaje cuando no hay resultados de búsqueda -->
   @if (filteredEmployees().length === 0 && searchTerm()) {
