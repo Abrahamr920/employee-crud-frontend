@@ -15,14 +15,77 @@
     <input
       type="text"
       id="table-search-users"
-      class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      [formControl]="searchControl"
+      class="block p-2 ps-10 pr-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       placeholder="Search for users"
     />
+    <!-- Botón para limpiar búsqueda -->
+    @if (searchControl.value) {
+    <button
+      type="button"
+      (click)="clearSearch()"
+      class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+      title="Limpiar búsqueda"
+    >
+      <svg
+        class="w-4 h-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        ></path>
+      </svg>
+    </button>
+    }
   </div>
 </div>
+
+<!-- Indicador de resultados de búsqueda -->
+<div class="px-6 py-2 text-sm text-gray-600 flex items-center gap-2">
+  @if (searchTerm()) {
+  <div class="flex items-center gap-2">
+    <span
+      class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium"
+    >
+      🔍 Búsqueda activa
+    </span>
+    <span
+      >Mostrando {{ filteredEmployees().length }} de
+      {{ employeesResource.value()?.length || 0 }} empleados</span
+    >
+    <button
+      (click)="clearSearch()"
+      class="text-blue-600 hover:text-blue-800 text-xs underline"
+    >
+      Limpiar búsqueda
+    </button>
+  </div>
+  } @else {
+  <span>Total: {{ employeesResource.value()?.length || 0 }} empleados</span>
+  }
+</div>
+
 <div
   class="relative h-[calc(100vh-240px)] overflow-auto shadow-md sm:rounded-lg"
 >
+  <!-- Estado de carga -->
+  @if (employeesResource.isLoading()) {
+  <div class="flex items-center justify-center h-32">
+    <div
+      class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+    ></div>
+    <span class="ml-2 text-gray-600">Cargando empleados...</span>
+  </div>
+  }
+
+  <!-- Tabla de empleados -->
+  @else if (employeesResource.value() && employeesResource.value()!.length > 0)
+  {
   <table class="w-full text-sm text-left rtl:text-right text-gray-500">
     <thead class="text-xs text-gray-700 uppercase sticky top-0 z-10 bg-gray-50">
       <tr>
@@ -37,7 +100,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (employee of employeesResource.value(); track $index) {
+      @for (employee of filteredEmployees(); track $index) {
       <tr class="bg-white border-b border-gray-200 hover:bg-gray-50">
         <!-- Id -->
         <td class="px-6 py-4">{{ employee.id }}</td>
@@ -102,4 +165,32 @@
       }
     </tbody>
   </table>
+
+  <!-- Mensaje cuando no hay resultados de búsqueda -->
+  @if (filteredEmployees().length === 0 && searchTerm()) {
+  <div class="text-center py-8 text-gray-500">
+    <p>No se encontraron empleados que coincidan con "{{ searchTerm() }}"</p>
+    <button (click)="clearSearch()" class="mt-2 text-blue-600 hover:underline">
+      Limpiar búsqueda
+    </button>
+  </div>
+  } }
+
+  <!-- Mensaje cuando no hay empleados -->
+  @else if (employeesResource.value() && employeesResource.value()!.length ===
+  0) {
+  <div class="text-center py-8 text-gray-500">
+    <p>No hay empleados registrados</p>
+  </div>
+  }
+
+  <!-- Mensaje de error -->
+  @else if (employeesResource.error()) {
+  <div class="text-center py-8 text-red-500">
+    <p>Error al cargar empleados</p>
+    <button (click)="retryLoad()" class="mt-2 text-blue-600 hover:underline">
+      Reintentar
+    </button>
+  </div>
+  }
 </div>

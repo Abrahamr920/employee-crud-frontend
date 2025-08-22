@@ -22,4 +22,20 @@ export class EmployeesService {
       .get<Position[]>(`${API_URL}/positions`)
       .pipe(tap((resp) => console.log('Resp', resp)));
   }
+
+  searchEmployees(employees: Employee[], searchTerm: string): Employee[] {
+    if (!searchTerm || searchTerm.trim() === '') {
+      return employees;
+    }
+
+    const term = searchTerm.toLowerCase().trim();
+    return employees.filter(
+      (employee) =>
+        employee.name.toLowerCase().includes(term) ||
+        employee.lastname.toLowerCase().includes(term) ||
+        employee.email.toLowerCase().includes(term) ||
+        employee.position.name.toLowerCase().includes(term) ||
+        employee.phone.includes(term)
+    );
+  }
 }
