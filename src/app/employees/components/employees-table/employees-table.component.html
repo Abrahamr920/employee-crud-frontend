@@ -70,9 +70,7 @@
   }
 </div>
 
-<div
-  class="relative h-[calc(100vh-240px)] shadow-md sm:rounded-lg overflow-hidden"
->
+<div class="relative h-[calc(100vh-280px)] shadow-md sm:rounded-lg">
   <!-- Estado de carga -->
   @if (employeesResource.isLoading()) {
   <div class="flex items-center justify-center h-32">
@@ -86,7 +84,7 @@
   <!-- Tabla de empleados -->
   @else if (employeesResource.value() && employeesResource.value()!.length > 0)
   {
-  <div class="overflow-auto" style="height: calc(100vh - 320px)">
+  <div class="overflow-auto" style="height: calc(100vh - 290px)">
     <table class="w-full text-sm text-left rtl:text-right text-gray-500">
       <thead
         class="text-xs text-gray-700 uppercase sticky top-0 z-10 bg-gray-50"
